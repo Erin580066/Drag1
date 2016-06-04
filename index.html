@@ -4,32 +4,78 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<style type="text/css">
-			#box{width:100px;height:100px;background:red;position:absolute;}
-			#box1{width:100px;height:100px;background:orange;}
+			#box,#box1{
+				width:100px;
+				height:100px;
+				background:red;
+				position:absolute;
+				left:0;
+				top:0;
+			}
+			#box1{left:200px;background:blue;}
 		</style>
 	</head>
 	<body>
 		<div id="box"></div>
-		<!--<div id="box1"></div>-->
+		<div id="box1"></div>
 		<script src="jquery-2.2.2.min.js"></script>
 		<script type="text/javascript">
-		
-			var oBox = document.getElementById("box");
-			oBox.onmousedown = function(ev){
-				var e = ev || event;
-				var disX = e.clientX - oBox.offsetLeft;
-				var disY = e.clientY - oBox.offsetTop;
-				document.onmousemove = function(ev){
-					alert(1)
-					var e = ev || event;
-					oBox.style.left = e.clientX - disX + 'px';
-					oBox.style.top = e.clientY -disY + 'px';
-				}
-				document.onmouseup = function(){
-					document.onmousemove = document.onmouseup = null;
-				}
-				return false;
+			///////源生的拖拽写法：：：：：
+//			function drag(id){
+//				var oBox = document.getElementById(id);
+//				oBox.onmousedown = function(ev){
+//					var e = ev || event;
+//					var disX = e.clientX - oBox.offsetLeft;
+//					var disY = e.clientY - oBox.offsetTop;
+//					document.onmousemove = function(ev){
+//						var e = ev || event;
+//						oBox.style.left = e.clientX - disX + 'px';
+//						oBox.style.top = e.clientY -disY + 'px';
+//					}
+//					document.onmouseup = function(){
+//						document.onmousemove = document.onmouseup = null;
+//					}
+//					return false;
+//				}
+//			}
+//			drag('box');
+//			drag('box1');
+			//////面向对象的拖拽：：：：：：：：：
+			function Drag(id){/////封装一个构造函数
+				this.oBox = document.getElementById(id);
+				this.disX = 0;
+				this.disY = 0;
 			}
+			Drag.prototype.init = function(){
+				var _this=this;
+				this.oBox.onmousedown = function(ev){
+					var e = ev || event;
+					_this.down(e);
+					document.onmousemove = function(ev){
+						var e = ev || event;
+						_this.move(e);
+					}
+					document.onmouseup = function(){
+						_this.up();
+					}
+					return false;
+				}
+			}
+			Drag.prototype.down = function(e){
+				this.disX = e.clientX - this.oBox.offsetLeft;
+				this.disY = e.clientY - this.oBox.offsetTop;
+			}
+			Drag.prototype.move = function(e){
+				this.oBox.style.left = e.clientX - this.disX +'px';
+				this.oBox.style.top = e.clientY - this.disY +'px';
+			}
+			Drag.prototype.up = function(e){
+				document.onmousemove = document.onmouseup = null;
+			}
+			var tab1 = new Drag('box');
+			tab1.init();
+			var tab1 = new Drag('box1');
+			tab1.init();
 		</script>
 	</body>
 </html>
