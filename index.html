@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#box{width:100px;height:100px;background:red;position:absolute;}
+			#box1{width:100px;height:100px;background:orange;}
+		</style>
+	</head>
+	<body>
+		<div id="box"></div>
+		<!--<div id="box1"></div>-->
+		<script src="jquery-2.2.2.min.js"></script>
+		<script type="text/javascript">
+		
+			var oBox = document.getElementById("box");
+			oBox.onmousedown = function(ev){
+				var e = ev || event;
+				var disX = e.clientX - oBox.offsetLeft;
+				var disY = e.clientY - oBox.offsetTop;
+				document.onmousemove = function(ev){
+					alert(1)
+					var e = ev || event;
+					oBox.style.left = e.clientX - disX + 'px';
+					oBox.style.top = e.clientY -disY + 'px';
+				}
+				document.onmouseup = function(){
+					document.onmousemove = document.onmouseup = null;
+				}
+				return false;
+			}
+		</script>
+	</body>
+</html>
