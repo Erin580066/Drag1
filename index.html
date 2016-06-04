@@ -72,10 +72,34 @@
 			Drag.prototype.up = function(e){
 				document.onmousemove = document.onmouseup = null;
 			}
+			
+			function LimitDrag(id){/////限制拖拽
+				Drag.call(this,id);//利用构造函数伪装来去继承父级的属性
+			}
+			for(var attr in Drag.prototype){
+				LimitDrag.prototype[attr]=Drag.prototype[attr];//利用原型链来继承父级的方法
+			}
+			LimitDrag.prototype.down = function(){
+				this.oBox.style.background = 'orange';
+			}
+			LimitDrag.prototype.up = function(){
+				document.onmousemove = document.onmouseup = null;
+				this.oBox.style.background = 'blue';
+			}
+			LimitDrag.prototype.move = function(e){
+				var L = e.clientX - this.disX;
+				var T = e.clientY - this.disY;
+				L = L<0?0:L;
+				L = L>500?500:L;
+				T = T<0?0:T;
+				T = T>500?500:T;
+				this.oBox.style.left = L +'px';
+				this.oBox.style.top = T +'px';
+			}
 			var tab1 = new Drag('box');
 			tab1.init();
-			var tab1 = new Drag('box1');
-			tab1.init();
+			var tab2 = new LimitDrag('box1');
+			tab2.init();
 		</script>
 	</body>
 </html>
